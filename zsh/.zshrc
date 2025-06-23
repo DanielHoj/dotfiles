@@ -25,7 +25,32 @@ alias ls='eza --color=auto'
 alias ll='eza --color=auto -l'
 alias la='eza --color=auto -la'
 
+
+# Alias for bat
+alias cat='bat --paging=always --style=plain --color=always'
+
+# Alias for git
+alias gs='git status'
+alias ga='git add'
+alias gc='git commit -m'
+alias gp='git push'
+alias gpl='git pull'
+alias gb='git branch'
+alias gco='git checkout'
+alias gm='git merge'
+alias gr='git rebase'
+alias gl='git log --oneline --graph --decorate --color=always'
+alias gst='git stash'
+alias gapply='git stash apply'
+alias gd='git diff'
+alias gt='git tag'
+alias gf='git fetch'
+alias grs='git reset'
+alias gshow='git show'
+
+
 alias python='uv run python'
+
 eval "$(thefuck --alias)"
 alias fu="fuck"
 # alias zshconfig="mate ~/.zshrc"
