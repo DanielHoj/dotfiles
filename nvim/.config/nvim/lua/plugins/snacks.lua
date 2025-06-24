@@ -3,10 +3,6 @@ return {
   priority = 1000,
   lazy = false,
   ---@type snacks.Config
-<<<<<<< HEAD
-
-=======
->>>>>>> 0bb1f9b247904e0d1b6347ee36cd85a978dbc8cf
   opts = {
     bigfile = { enabled = true },
     dashboard = { enabled = true },
@@ -30,10 +26,6 @@ return {
     }
   },
   keys = {
-<<<<<<< HEAD
-
-=======
->>>>>>> 0bb1f9b247904e0d1b6347ee36cd85a978dbc8cf
     -- Top Pickers & Explorer
     { "<leader><space>", function() Snacks.picker.smart() end, desc = "Smart Find Files" },
     { "<leader>,", function() Snacks.picker.buffers() end, desc = "Buffers" },
