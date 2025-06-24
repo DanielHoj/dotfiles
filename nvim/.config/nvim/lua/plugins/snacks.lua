@@ -3,6 +3,7 @@ return {
   priority = 1000,
   lazy = false,
   ---@type snacks.Config
+
   opts = {
     bigfile = { enabled = true },
     dashboard = { enabled = true },
@@ -26,8 +27,6 @@ return {
     }
   },
   keys = {
-
-    local Snacks = require("snacks")
 
     -- Top Pickers & Explorer
     { "<leader><space>", function() Snacks.picker.smart() end, desc = "Smart Find Files" },
