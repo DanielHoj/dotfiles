@@ -39,9 +39,10 @@ keymap.set("n", "<leader>qp", ":cprev<CR>")  -- jump to prev quickfix list item
 keymap.set("n", "<leader>ql", ":clast<CR>")  -- jump to last quickfix list item
 keymap.set("n", "<leader>qc", ":cclose<CR>") -- close quickfix list
 
-vim.keymap.set(
+keymap.set(
     {"n", "x"},
     "<leader>rr",
     function() require('refactoring').select_refactor() end
 )
 -- Note that not all refactor support both normal and visual mode
+
