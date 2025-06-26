@@ -1,10 +1,12 @@
 export PATH=$HOME/bin:$HOME/.local/bin:/usr/local/bin:$PATH
 
-function yy() {
+function y() {
 	local tmp="$(mktemp -t "yazi-cwd.XXXXXX")"
 	yazi "$@" --cwd-file="$tmp"
 	if cwd="$(cat -- "$tmp")" && [ -n "$cwd" ] && [ "$cwd" != "$PWD" ]; then
-		cd -- "$cwd"
+		# Strip ANSI color codes from $cwd just in case
+		clean_cwd="$(printf '%s' "$cwd" | sed -E 's/\x1b\[[0-9;]*m//g')"
+		cd -- "$clean_cwd"
 	fi
 	rm -f -- "$tmp"
 }
