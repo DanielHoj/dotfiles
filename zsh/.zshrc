@@ -51,8 +51,6 @@ alias grs='git reset'
 alias gshow='git show'
 
 
-alias python='uv run python'
-
 eval "$(thefuck --alias)"
 alias fu="fuck"
 # alias zshconfig="mate ~/.zshrc"
@@ -83,4 +81,4 @@ zinit light zsh-users/zsh-autosuggestions
 zinit light zsh-users/zsh-syntax-highlighting
 zinit light zsh-users/zsh-history-substring-search
 
-# eval "$(_MARIMO_COMPLETE=zsh_source marimo)"
+export TAVILY_API_KEY=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 
