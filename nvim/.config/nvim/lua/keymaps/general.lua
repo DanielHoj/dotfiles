@@ -55,3 +55,4 @@ keymap.set("n", "<leader>dp", function() vim.diagnostic.jump({ count = -1, float
 keymap.set("n", "<leader>tl" , ":Lazy<CR>", { desc = "Open Lazy.nvim plugin manager" })
 keymap.set("n", "<leader>tm", ":Mason<CR>", { desc = "Open Mason.nvim package manager" })
 keymap.set("n", "<leader>tM", ":MCPHub<CR>", { desc = "Open MCPHub" })
+keymap.set("n", "<leader>tt", ":ToggleTerm<CR>", { desc = "Toggle terminal" })
