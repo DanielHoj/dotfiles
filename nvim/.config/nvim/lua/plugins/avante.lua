@@ -1,23 +1,14 @@
 return {
   {
     "yetone/avante.nvim",
-    event = "VeryLazy",  -- Make sure this loads after Copilot
+    event = "VeryLazy", -- Make sure this loads after Copilot
     version = false,
     build = "make",
     config = function()
       -- Wait for Copilot to be ready before initializing Avante
       vim.defer_fn(function()
         require("avante").setup({
-          system_prompt = function()
-              local hub = require("mcphub").get_hub_instance()
-              return hub and hub:get_active_servers_prompt() or ""
-          end,
           -- Using function prevents requiring mcphub before it's loaded
-          custom_tools = function()
-              return {
-                  require("mcphub.extensions.avante").mcp_tool(),
-              }
-          end,
           provider = "copilot",
           mappings = {
             --
@@ -63,7 +54,7 @@ return {
             },
           },
         })
-      end, 300)  -- Increased delay to improve stability
+      end, 300) -- Increased delay to improve stability
     end,
     dependencies = {
       "nvim-treesitter/nvim-treesitter",
