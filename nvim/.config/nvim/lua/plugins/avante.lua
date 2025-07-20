@@ -59,10 +59,9 @@ return {
               remove_file = "d",
               add_file = "@",
               close = { "<Esc>", "q" },
-              close_from_input = nil, -- e.g., { normal = "<Esc>", insert = "<C-d>" }
+              close_from_input = nil,
             },
           },
-          -- Your other configuration...
         })
       end, 300)  -- Increased delay to improve stability
     end,
@@ -70,7 +69,7 @@ return {
       "nvim-treesitter/nvim-treesitter",
       "nvim-lua/plenary.nvim",
       "MunifTanjim/nui.nvim",
-      "zbirenbaum/copilot.lua",  -- Add Copilot as dependency
+      "zbirenbaum/copilot.lua",
     },
   },
 }
