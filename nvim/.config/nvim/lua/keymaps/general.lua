@@ -38,21 +38,37 @@ keymap.set("n", "<leader>ql", ":clast<CR>", { desc = "Jump to last quickfix list
 keymap.set("n", "<leader>qc", ":cclose<CR>", { desc = "Close quickfix list" })
 
 keymap.set(
-    {"n", "x"},
-    "<leader>rr",
-    function() require('refactoring').select_refactor() end,
-    { desc = "Trigger refactoring options" }
+  { "n", "x" },
+  "<leader>tr",
+  function() require('refactoring').select_refactor() end,
+  { desc = "Trigger refactoring options" }
 )
 
 -- lsp keymaps
 keymap.set("n", "<leader>ca", vim.lsp.buf.code_action, { desc = "Trigger code actions" })
 keymap.set("n", "<leader>dd", vim.diagnostic.open_float, { desc = "Show diagnostics in a floating window" })
-keymap.set("n", "<leader>dn", function() vim.diagnostic.jump({ count = 1, float = true }) end, { desc = "Jump to next diagnostic" })
-keymap.set("n", "<leader>dp", function() vim.diagnostic.jump({ count = -1, float = true }) end, { desc = "Jump to previous diagnostic" })
+keymap.set("n", "<leader>dn", function() vim.diagnostic.jump({ count = 1, float = true }) end,
+  { desc = "Jump to next diagnostic" })
+keymap.set("n", "<leader>dp", function() vim.diagnostic.jump({ count = -1, float = true }) end,
+  { desc = "Jump to previous diagnostic" })
 
 
 -- Toggle tools
-keymap.set("n", "<leader>tl" , ":Lazy<CR>", { desc = "Open Lazy.nvim plugin manager" })
+keymap.set("n", "<leader>tl", ":Lazy<CR>", { desc = "Open Lazy.nvim plugin manager" })
 keymap.set("n", "<leader>tm", ":Mason<CR>", { desc = "Open Mason.nvim package manager" })
 keymap.set("n", "<leader>tM", ":MCPHub<CR>", { desc = "Open MCPHub" })
 keymap.set("n", "<leader>tt", ":ToggleTerm<CR>", { desc = "Toggle terminal" })
+
+keymap.set({ "n", "x" }, "<M-CR>", function()
+  local dap = require('dap')
+  local iron = require('iron.core')
+  local lines = require('keymaps.python-parser').get_text()
+  if dap.session() then
+    dap.repl.open()
+    dap.repl.execute(lines)
+    return
+  else
+    iron.send(nil, lines)
+    return
+  end
+end)
