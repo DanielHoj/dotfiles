@@ -81,11 +81,5 @@ return {
     -- iron also has a list of commands, see :h iron-commands for all available commands
     vim.keymap.set('n', '<space>rf', '<cmd>IronFocus<cr>')
     vim.keymap.set('n', '<space>rh', '<cmd>IronHide<cr>')
-    local parser = require('reptile.parser')
-
-    -- vim.keymap.set({ "n", "x" }, "<S-CR", function()
-    --   local lines = parser.get_text()
-    --   iron.send(nil, lines)
-    -- end)
   end
 }

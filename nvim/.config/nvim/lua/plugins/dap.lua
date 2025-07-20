@@ -119,14 +119,6 @@ return {
       keymap.set('n', '<M-d>tm', function() dap_python.test_method() end, { desc = "DAP-Python: Test Method" })
       keymap.set('n', '<M-d>tc', function() dap_python.test_class() end, { desc = "DAP-Python: Test Class" })
       keymap.set('n', '<M-d>ts', function() dap_python.debug_selection() end, { desc = "DAP-Python: Debug Selection" })
-
-      local parser = require('reptile.parser')
-
-      keymap.set({ "n", "x" }, "<M-CR>", function()
-        local lines = parser.get_text()
-        dap.repl.open()
-        dap.repl.execute(lines)
-      end)
     end,
   }
 }
