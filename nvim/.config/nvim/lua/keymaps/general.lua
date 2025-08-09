@@ -57,18 +57,26 @@ keymap.set("n", "<leader>dp", function() vim.diagnostic.jump({ count = -1, float
 keymap.set("n", "<leader>tl", ":Lazy<CR>", { desc = "Open Lazy.nvim plugin manager" })
 keymap.set("n", "<leader>tm", ":Mason<CR>", { desc = "Open Mason.nvim package manager" })
 keymap.set("n", "<leader>tM", ":MCPHub<CR>", { desc = "Open MCPHub" })
-keymap.set("n", "<leader>tt", ":ToggleTerm<CR>", { desc = "Toggle terminal" })
 
 keymap.set({ "n", "x" }, "<M-CR>", function()
   local dap = require('dap')
-  local iron = require('iron.core')
   local lines = require('keymaps.python-parser').get_text()
   if dap.session() then
-    dap.repl.open()
     dap.repl.execute(lines)
-    return
+    dd(lines)
   else
-    iron.send(nil, lines)
-    return
+    dap.set_breakpoint()
+    dap.run({
+      type = 'python',
+      request = 'launch',
+      name = "Launch file",
+      program = "${file}",
+      pythonPath = function()
+        return 'python'
+      end,
+      console = "integratedTerminal",
+    })
+    dap.repl.execute(lines)
+    dd(lines)
   end
 end)
