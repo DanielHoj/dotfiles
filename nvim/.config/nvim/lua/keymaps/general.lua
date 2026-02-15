@@ -66,7 +66,7 @@ keymap.set({ "n", "x" }, "<M-CR>", function()
     dd(lines)
   else
     dap.set_breakpoint()
-    dap.run({
+    local config = {
       type = 'python',
       request = 'launch',
       name = "Launch file",
@@ -75,7 +75,9 @@ keymap.set({ "n", "x" }, "<M-CR>", function()
         return 'python'
       end,
       console = "integratedTerminal",
-    })
+    }
+    local opts = {}
+    dap.run(config, opts)
     dap.repl.execute(lines)
     dd(lines)
   end

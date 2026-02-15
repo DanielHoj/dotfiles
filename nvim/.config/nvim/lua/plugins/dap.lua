@@ -5,11 +5,13 @@ return {
       "nvim-neotest/nvim-nio",
       "rcarriga/nvim-dap-ui",
       "mfussenegger/nvim-dap-python",
+      "igorlfs/nvim-dap-view",
     },
     config = function()
       local dap = require('dap')
       local dapui = require('dapui')
       local dap_python = require('dap-python')
+      local dap_view = require('dap-view')
 
       -- Python setup
       dap_python.setup('python')
@@ -57,6 +59,7 @@ return {
 
       -- Set up Python test configurations
       dap_python.test_runner = 'pytest'
+      dap_view.setup()
 
       -- Configure DAP UI
       dapui.setup({
@@ -78,7 +81,7 @@ return {
               "watches",
             },
             size = 40,
-            position = "left",
+            position = "right",
           },
           {
             elements = {
@@ -114,6 +117,11 @@ return {
       keymap.set('n', '<M-d>r', function() dap.repl.toggle() end, { desc = "DAP: toggle [r]EPL" })
       keymap.set('n', '<M-d>u', function() dapui.toggle() end, { desc = "DAP: toggle [u]i" })
       keymap.set('n', '<M-d>h', function() dapui.eval(nil, { enter = true }) end, { desc = "DAP: [h]over" })
+      keymap.set('n', '<M-d>v', function()
+        dapui.open({ 1, reset = true })
+      end, { desc = "DAP: Open Variable Explorer" })
+      keymap.set('n', '<M-d>s', function() dap.terminate() end, { desc = "DAP: [s]top" })
+      keymap.set('n', '<M-d>R', function() dap.restart() end, { desc = "DAP: [R]estart" })
 
       -- Python specific keymaps
       keymap.set('n', '<M-d>tm', function() dap_python.test_method() end, { desc = "DAP-Python: Test Method" })

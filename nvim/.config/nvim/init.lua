@@ -10,6 +10,8 @@ vim.lsp.enable({
   "ruff",
   "sqlls",
   "lua_ls",
+  "biome",
+  "ts_ls",
 })
 
 
@@ -20,12 +22,12 @@ vim.api.nvim_create_autocmd("User", {
     if event.data == "copilot.lua" then
       -- Check if Copilot needs authentication
       vim.defer_fn(function()
-        local copilot_auth_status = vim.fn.system("ls -la " .. 
-          vim.fn.expand("~/.config/github-copilot/hosts.json") .. 
-          " 2>/dev/null || ls -la " .. 
-          vim.fn.expand("~/.config/github-copilot/apps.json") .. 
+        local copilot_auth_status = vim.fn.system("ls -la " ..
+          vim.fn.expand("~/.config/github-copilot/hosts.json") ..
+          " 2>/dev/null || ls -la " ..
+          vim.fn.expand("~/.config/github-copilot/apps.json") ..
           " 2>/dev/null")
-          
+
         if copilot_auth_status == "" then
           -- No auth files found, prompt for authentication
           vim.cmd("Copilot auth")

@@ -1,0 +1,42 @@
+{
+  "nativeMCPServers": {
+    "neovim": {
+      "disabled_resources": [
+        
+      ]
+    }
+  },
+  "mcpServers": {
+    "sequential-thinking": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-sequential-thinking"
+      ]
+    },
+    "awslabs.frontend-mcp-server": {
+      "env": {
+        "FASTMCP_LOG_LEVEL": "ERROR"
+      },
+      "disabled": false,
+      "args": [
+        "awslabs.frontend-mcp-server@latest"
+      ],
+      "autoApprove": [
+        
+      ],
+      "command": "uvx"
+    },
+    "task_master": {
+      "env": [
+        
+      ],
+      "args": [
+        "-y",
+        "--package=task-master-ai",
+        "task-master-ai"
+      ],
+      "command": "npx"
+    }
+  }
+}

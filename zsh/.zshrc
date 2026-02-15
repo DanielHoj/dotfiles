@@ -1,5 +1,25 @@
 export PATH=$HOME/bin:$HOME/.local/bin:/usr/local/bin:$PATH
 
+if command -v xclip &> /dev/null; then
+  alias pbcopy="xclip -selection clipboard"
+  alias pbpaste="xclip -selection clipboard -o"
+elif command -v wl-copy &> /dev/null; then
+  alias pbcopy="wl-copy"
+  alias pbpaste="wl-paste"
+fi
+
+# Function to copy the output of the previous command directly
+copy-last-output() {
+  # Check if there is a saved output from the last command
+  local output=$(fc -ln -1 | sh 2>&1)
+  echo "$output" | pbcopy
+  echo "Last command output copied to clipboard!"
+}
+bindkey -s '^y' 'copy-last-output\n'
+
+# Add vim mode
+bindkey -v
+
 function y() {
 	local tmp="$(mktemp -t "yazi-cwd.XXXXXX")"
 	yazi "$@" --cwd-file="$tmp"
@@ -12,21 +32,29 @@ function y() {
 }
 
 alias av="source .venv/bin/activate"
+alias vim='nvim'
+alias vi='nvim'
 
-if [[ -n $SSH_CONNECTION ]]; then
-  export EDITOR='vim'
-else
-  export EDITOR='nvim'
-fi
+# Node:
+source /usr/share/nvm/init-nvm.sh
+source /usr/share/nvm/bash_completion
+
 # Use Starship as the prompt
-eval "$(starship init zsh)"
+# Check that the function `starship_zle-keymap-select()` is defined.
+# xref: https://github.com/starship/starship/issues/3418
+type starship_zle-keymap-select >/dev/null || \
+  {
+    echo "Load starship"
+    eval "$(starship init zsh)"
+  }
+
 eval "$(zoxide init zsh)"
+eval "$(atuin init zsh)"
 
 # Alias for eza
 alias ls='eza --color=auto'
 alias ll='eza --color=auto -l'
 alias la='eza --color=auto -la'
-
 
 # Alias for bat
 alias cat='bat --paging=always --style=plain --color=always'
@@ -50,10 +78,8 @@ alias gf='git fetch'
 alias grs='git reset'
 alias gshow='git show'
 
-
 eval "$(thefuck --alias)"
 alias fu="fuck"
-# alias zshconfig="mate ~/.zshrc"
 
 ### Added by Zinit's installer
 if [[ ! -f $HOME/.local/share/zinit/zinit.git/zinit.zsh ]]; then
@@ -78,7 +104,7 @@ zinit light-mode for \
 
 ### End of Zinit's installer chunk
 zinit light zsh-users/zsh-autosuggestions
+bindkey '^l' autosuggest-accept
 zinit light zsh-users/zsh-syntax-highlighting
 zinit light zsh-users/zsh-history-substring-search
 
-export TAVILY_API_KEY=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 
