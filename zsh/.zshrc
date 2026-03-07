@@ -1,4 +1,5 @@
 export PATH=$HOME/bin:$HOME/.local/bin:/usr/local/bin:$PATH
+export EDITOR=nvim
 
 if command -v xclip &> /dev/null; then
   alias pbcopy="xclip -selection clipboard"
