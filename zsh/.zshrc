@@ -25,9 +25,7 @@ function y() {
 	local tmp="$(mktemp -t "yazi-cwd.XXXXXX")"
 	yazi "$@" --cwd-file="$tmp"
 	if cwd="$(cat -- "$tmp")" && [ -n "$cwd" ] && [ "$cwd" != "$PWD" ]; then
-		# Strip ANSI color codes from $cwd just in case
-		clean_cwd="$(printf '%s' "$cwd" | sed -E 's/\x1b\[[0-9;]*m//g')"
-		cd -- "$clean_cwd"
+		cd -- "$cwd"
 	fi
 	rm -f -- "$tmp"
 }
@@ -57,8 +55,6 @@ alias ls='eza --color=auto'
 alias ll='eza --color=auto -l'
 alias la='eza --color=auto -la'
 
-# Alias for bat
-alias cat='bat --paging=always --style=plain --color=always'
 
 # Alias for git
 alias gs='git status'
