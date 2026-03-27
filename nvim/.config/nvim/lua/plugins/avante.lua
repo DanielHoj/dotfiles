@@ -23,10 +23,11 @@ return {
               prev = "[x",
             },
             suggestion = {
-              accept = "<M-l>",
-              next = "<M-n>",
-              prev = "<M-p>",
-              dismiss = "<M-h>",
+              -- Handled by copilot.lua directly
+              accept = false,
+              next = false,
+              prev = false,
+              dismiss = false,
             },
             jump = {
               next = "]]",

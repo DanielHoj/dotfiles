@@ -12,6 +12,18 @@ vim.lsp.enable({
   "lua_ls",
   "biome",
   "ts_ls",
+  "gopls",
+})
+
+-- Go uses tabs per gofmt convention
+vim.api.nvim_create_autocmd("FileType", {
+  pattern = { "go", "gomod", "gowork", "gotmpl" },
+  callback = function()
+    vim.bo.expandtab = false
+    vim.bo.tabstop = 4
+    vim.bo.shiftwidth = 4
+    vim.bo.softtabstop = 4
+  end,
 })
 
 

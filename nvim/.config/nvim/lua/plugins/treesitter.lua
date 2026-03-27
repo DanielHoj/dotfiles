@@ -1,0 +1,27 @@
+return {
+    "nvim-treesitter/nvim-treesitter",
+    build = ":TSUpdate",
+    opts = {
+        ensure_installed = {
+            "c",
+            "go",
+            "gomod",
+            "gosum",
+            "gowork",
+            "javascript",
+            "json",
+            "lua",
+            "markdown",
+            "markdown_inline",
+            "query",
+            "tsx",
+            "typescript",
+            "vim",
+            "vimdoc",
+            "vue",
+            "yaml",
+        },
+        highlight = { enable = true },
+        indent = { enable = true },
+    },
+}

@@ -1,60 +1,37 @@
--- Set highlight on search
-vim.o.hlsearch = true
-
-vim.opt.clipboard = "unnamedplus"
-
--- Remove swapfiles
-vim.o.swapfile = false
-
--- Make line numbers default
-vim.wo.number = true
-vim.o.relativenumber = true
-
--- Set center cursor
-vim.o.scrolloff = 999
-
--- Enable break indent
-vim.o.breakindent = true
-
--- Save undo history
-vim.o.undofile = true
-
--- Case insensitive searching UNLESS /C or capital in search
-vim.o.ignorecase = true
-vim.o.smartcase = true
-
--- Decrease update time
-vim.o.updatetime = 250
-vim.wo.signcolumn = 'yes'
-
--- Set completeopt to have a better completion experience
-vim.o.completeopt = 'menuone,noselect'
-
 local opt = vim.opt
 
--- Session Management
-opt.sessionoptions = "blank,buffers,curdir,folds,help,tabpages,winsize,winpos,terminal,localoptions"
+-- Search
+opt.hlsearch = true
+opt.ignorecase = true
+opt.smartcase = true
+
+-- Clipboard
+opt.clipboard = "unnamedplus"
+
+-- Swap / Undo
+opt.swapfile = false
+opt.undofile = true
 
 -- Line Numbers
-opt.relativenumber = true
 opt.number = true
+opt.relativenumber = true
+
+-- Scrolling
+opt.scrolloff = 999
 
 -- Tabs & Indentation
 opt.tabstop = 2
 opt.shiftwidth = 2
+opt.softtabstop = 2
 opt.expandtab = true
 opt.autoindent = true
-vim.bo.softtabstop = 2
+opt.breakindent = true
 
 -- Line Wrapping
 opt.wrap = true
 opt.linebreak = true
 
--- Search Settings
-opt.ignorecase = true
-opt.smartcase = true
-
--- Cursor Line
+-- Cursor
 opt.cursorline = true
 
 -- Appearance
@@ -62,40 +39,43 @@ opt.termguicolors = true
 opt.background = "dark"
 opt.signcolumn = "yes"
 vim.diagnostic.config {
-  float = { border = "rounded" }, -- add border to diagnostic popups
+  float = { border = "rounded" },
 }
+
+-- Completion
+opt.completeopt = "menuone,noselect"
 
 -- Backspace
 opt.backspace = "indent,eol,start"
 
-
--- Split Windows
+-- Splits
 opt.splitright = true
 opt.splitbelow = true
 
 -- Consider - as part of keyword
 opt.iskeyword:append("-")
 
--- Disable the mouse while in nvim
+-- Disable mouse
 opt.mouse = ""
 
+-- Session Management
+opt.sessionoptions = "blank,buffers,curdir,folds,help,tabpages,winsize,winpos,terminal,localoptions"
+
+-- Update time
+opt.updatetime = 250
+
+-- Commands
 vim.api.nvim_create_user_command('CdHere', function()
   vim.cmd('cd %:p:h')
   print('Changed directory to: ' .. vim.fn.getcwd())
 end, {})
 
 vim.api.nvim_create_user_command('ActivateEnv', function()
-  -- Get the current directory
   local cwd = vim.fn.getcwd()
-
-  -- Check if this is a Python project (has pyproject.toml)
   local has_pyproject = vim.fn.filereadable(cwd .. "/pyproject.toml") == 1
-
-  -- Common venv directory names to check
   local venv_dirs = { ".venv", "venv", "env" }
   local found_venv = nil
 
-  -- Look for virtual environment directories
   for _, dir in ipairs(venv_dirs) do
     local venv_path = cwd .. "/" .. dir
     if vim.fn.isdirectory(venv_path) == 1 then
@@ -105,7 +85,6 @@ vim.api.nvim_create_user_command('ActivateEnv', function()
   end
 
   if has_pyproject and found_venv then
-    -- Open a terminal with the virtual environment activated
     local activate_script = found_venv .. "/bin/activate"
     if vim.fn.filereadable(activate_script) == 1 then
       vim.cmd("!source " .. activate_script)
@@ -115,5 +94,3 @@ vim.api.nvim_create_user_command('ActivateEnv', function()
     vim.cmd('split | terminal echo "' .. msg .. '" && zsh')
   end
 end, {})
-
--- vim.g.python3_host_prog = "/usr/bin/uv-run-python"
