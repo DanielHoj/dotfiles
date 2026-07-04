@@ -59,10 +59,14 @@ return {
   },
   settings = {
     basedpyright = {
+      -- Type checking is delegated to mypy via nvim-lint (matches me3cs CI).
+      -- basedpyright is kept for navigation, hover, and completion only.
+      disableOrganizeImports = false,
       analysis = {
         autoSearchPaths = true,
         useLibraryCodeForTypes = true,
-        typeCheckingMode = "standard",
+        typeCheckingMode = "off",
+        diagnosticMode = "openFilesOnly",
       },
     },
     -- This will be overwritten by the venv detection

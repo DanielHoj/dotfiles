@@ -52,6 +52,17 @@ opt.backspace = "indent,eol,start"
 opt.splitright = true
 opt.splitbelow = true
 
+-- Diff
+opt.diffopt = {
+  "internal",
+  "filler",
+  "closeoff",
+  "algorithm:histogram",
+  "indent-heuristic",
+  "inline:char",
+  "linematch:60",
+}
+
 -- Consider - as part of keyword
 opt.iskeyword:append("-")
 
@@ -70,9 +81,12 @@ vim.api.nvim_create_user_command('CdHere', function()
   print('Changed directory to: ' .. vim.fn.getcwd())
 end, {})
 
+-- Set VIRTUAL_ENV + prepend its bin/ to PATH for nvim's env. This propagates
+-- to `:terminal`, DAP launches, and any subprocess spawned by a plugin.
+-- The previous version called `!source` in a transient subshell that exited
+-- immediately, so it had no effect.
 vim.api.nvim_create_user_command('ActivateEnv', function()
   local cwd = vim.fn.getcwd()
-  local has_pyproject = vim.fn.filereadable(cwd .. "/pyproject.toml") == 1
   local venv_dirs = { ".venv", "venv", "env" }
   local found_venv = nil
 
@@ -84,13 +98,12 @@ vim.api.nvim_create_user_command('ActivateEnv', function()
     end
   end
 
-  if has_pyproject and found_venv then
-    local activate_script = found_venv .. "/bin/activate"
-    if vim.fn.filereadable(activate_script) == 1 then
-      vim.cmd("!source " .. activate_script)
-    end
-  else
-    local msg = not has_pyproject and "No pyproject.toml found" or "No virtual environment found"
-    vim.cmd('split | terminal echo "' .. msg .. '" && zsh')
+  if not found_venv then
+    vim.notify("No virtual environment found in " .. cwd, vim.log.levels.WARN)
+    return
   end
+
+  vim.env.VIRTUAL_ENV = found_venv
+  vim.env.PATH = found_venv .. "/bin:" .. vim.env.PATH
+  vim.notify("Activated venv: " .. found_venv, vim.log.levels.INFO)
 end, {})

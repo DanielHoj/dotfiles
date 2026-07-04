@@ -1,10 +1,5 @@
 return {
   'saghen/blink.cmp',
-  -- optional: provides snippets for the snippet source
-  dependencies = { 'rafamadriz/friendly-snippets',
-    'Kaiser-Yang/blink-cmp-avante',
-  },
-
   -- use a release tag to download pre-built binaries
   version = '1.*',
   -- AND/OR build from source, requires nightly: https://rust-lang.github.io/rustup/concepts/channels.html#working-with-nightly-rust
@@ -35,22 +30,15 @@ return {
       nerd_font_variant = 'mono'
     },
 
-    -- (Default) Only show the documentation popup when manually triggered
-    completion = { documentation = { auto_show = false } },
+    -- Keep suggestions explicit and quiet: no automatic menu popups while typing.
+    -- Use <C-space> to open completion manually.
+    completion = {
+      menu = { auto_show = false },
+      documentation = { auto_show = false },
+    },
 
-    -- Default list of enabled providers defined so that you can extend it
-
-    -- elsewhere in your config, without redefining it, due to `opts_extend`
     sources = {
-      providers = {
-        avante = {
-          module = 'blink-cmp-avante',
-          name = 'Avante',
-          opts = {
-          }
-        }
-      },
-      default = { 'avante', 'lsp', 'path', 'snippets', 'buffer' },
+      default = { 'lsp', 'path' },
     },
 
     -- (Default) Rust fuzzy matcher for typo resistance and significantly better performance

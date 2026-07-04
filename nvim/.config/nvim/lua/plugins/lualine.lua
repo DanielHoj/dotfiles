@@ -5,8 +5,6 @@ return {
   dependencies = {
     -- https://github.com/nvim-tree/nvim-web-devicons
     'nvim-tree/nvim-web-devicons', -- fancy icons
-    -- https://github.com/linrongbin16/lsp-progress.nvim
-    'linrongbin16/lsp-progress.nvim', -- LSP loading progress
   },
   opts = {
     options = {

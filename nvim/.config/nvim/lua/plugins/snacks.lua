@@ -5,7 +5,7 @@ return {
   ---@module "snacks"
   opts = {
     bigfile = { enabled = true },
-    dashboard = { enabled = true },
+    dashboard = { enabled = false },
     explorer = {
       enabled = true,
       close_on_file_open = true,
@@ -18,10 +18,10 @@ return {
     },
     picker = { enabled = true },
     quickfile = { enabled = true },
-    scope = { enabled = true },
-    scroll = { enabled = true },
-    statuscolumn = { enabled = true },
-    words = { enabled = true },
+    scope = { enabled = false },
+    scroll = { enabled = false },
+    statuscolumn = { enabled = false },
+    words = { enabled = false },
     styles = {
       notification = {
         -- wo = { wrap = true } -- Wrap notifications
@@ -34,13 +34,27 @@ return {
     { "<leader>,",       function() Snacks.picker.buffers() end,         desc = "Buffers" },
     { "<leader>/",       function() Snacks.picker.grep() end,            desc = "Grep" },
     { "<leader>:",       function() Snacks.picker.command_history() end, desc = "Command History" },
-    { "<leader>n",       function() Snacks.picker.notifications() end,   desc = "Notification History" },
+    -- <leader>n is bound below to Snacks.notifier.show_history (faster, no picker)
     {
       "<leader>e",
       function()
-        local current_file = vim.fn.expand("%:p")
-        local current_dir = vim.fn.fnamemodify(current_file, ":h")
-        Snacks.explorer({ cwd = current_dir })
+        local bufname = vim.api.nvim_buf_get_name(0)
+        local cwd
+
+        -- Diff/special buffers can use URI-like names such as
+        -- `gitsigns:/path/to/repo:0:file`. Snacks explorer needs a real
+        -- directory, so only derive cwd from normal filesystem buffers.
+        if bufname ~= "" and not bufname:match("^%w[%w+.-]*:") then
+          local stat = vim.uv.fs_stat(bufname)
+          if stat and stat.type == "directory" then
+            cwd = bufname
+          elseif stat and stat.type == "file" then
+            cwd = vim.fs.dirname(bufname)
+          end
+        end
+
+        cwd = cwd or Snacks.git.get_root(0) or vim.fn.getcwd()
+        Snacks.explorer({ cwd = cwd })
       end,
       desc = "File Explorer (Current Dir)"
     },
@@ -69,7 +83,7 @@ return {
     { '<leader>s"', function() Snacks.picker.registers() end,                               desc = "Registers" },
     { '<leader>s/', function() Snacks.picker.search_history() end,                          desc = "Search History" },
     { "<leader>sa", function() Snacks.picker.autocmds() end,                                desc = "Autocmds" },
-    { "<leader>sb", function() Snacks.picker.lines() end,                                   desc = "Buffer Lines" },
+    -- <leader>sb already bound above (Buffer Lines)
     { "<leader>sc", function() Snacks.picker.command_history() end,                         desc = "Command History" },
     { "<leader>sC", function() Snacks.picker.commands() end,                                desc = "Commands" },
     { "<leader>sd", function() Snacks.picker.diagnostics() end,                             desc = "Diagnostics" },
@@ -105,8 +119,6 @@ return {
     { "<leader>gg", function() Snacks.lazygit() end,                                        desc = "Lazygit" },
     { "<leader>un", function() Snacks.notifier.hide() end,                                  desc = "Dismiss All Notifications" },
     { "<leader>tt", function() Snacks.terminal() end,                                       desc = "Toggle Terminal" },
-    { "]]",         function() Snacks.words.jump(vim.v.count1) end,                         desc = "Next Reference",           mode = { "n", "t" } },
-    { "[[",         function() Snacks.words.jump(-vim.v.count1) end,                        desc = "Prev Reference",           mode = { "n", "t" } },
     {
       "<leader>N",
       desc = "Neovim News",
@@ -127,11 +139,23 @@ return {
     },
   },
   init = function()
-    -- Add format on save functionality
+    -- Add format on save functionality.
+    -- Filetypes handled by conform.nvim are skipped so prettier/ruff_format
+    -- aren't fighting LSP formatters for the same buffer.
+    local conform_managed = {
+      javascript = true, javascriptreact = true,
+      typescript = true, typescriptreact = true,
+      vue = true, css = true, scss = true, html = true,
+      json = true, jsonc = true, yaml = true, markdown = true,
+      python = true,
+    }
     local format_group = vim.api.nvim_create_augroup("FormatOnSave", { clear = true })
     vim.api.nvim_create_autocmd("BufWritePre", {
       group = format_group,
       callback = function()
+        if conform_managed[vim.bo.filetype] then
+          return
+        end
         vim.lsp.buf.format({ async = false })
       end,
     })
