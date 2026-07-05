@@ -193,20 +193,25 @@ return {
 
       -- ── Frontend (vue / ts / tsx / js) via vscode-js-debug ─────────────
 
-      local js_debug = vim.fn.stdpath("data") .. "/mason/packages/js-debug-adapter"
-      if vim.fn.isdirectory(js_debug) == 1 then
+      -- Resolve the vscode-js-debug DAP server. On NixOS it comes from Nix as a
+      -- `js-debug` wrapper on PATH (nixos-config nvim-tools.nix); on Arch, Mason
+      -- installs it under stdpath('data'). Either way it takes the port as argv.
+      local js_debug_exe = vim.fn.exepath("js-debug")
+      local mason_js = vim.fn.stdpath("data") .. "/mason/packages/js-debug-adapter"
+      local js_exec
+      if js_debug_exe ~= "" then
+        js_exec = { command = js_debug_exe, args = { "${port}" } }
+      elseif vim.fn.isdirectory(mason_js) == 1 then
+        js_exec = { command = "node", args = { mason_js .. "/js-debug/src/dapDebugServer.js", "${port}" } }
+      end
+
+      if js_exec then
         for _, adapter in ipairs({ "pwa-chrome", "pwa-node" }) do
           dap.adapters[adapter] = {
             type = "server",
             host = "localhost",
             port = "${port}",
-            executable = {
-              command = "node",
-              args = {
-                js_debug .. "/js-debug/src/dapDebugServer.js",
-                "${port}",
-              },
-            },
+            executable = js_exec,
           }
         end
 
