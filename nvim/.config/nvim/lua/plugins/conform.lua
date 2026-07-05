@@ -28,6 +28,8 @@ return {
       yaml = { "prettier" },
       markdown = { "prettier" },
       python = { "ruff_format", "ruff_organize_imports" },
+      rust = { "rustfmt" },
+      nix = { "nixfmt" },
     },
     format_on_save = function(bufnr)
       -- Disable autoformat for files in a `node_modules` or generated directory.

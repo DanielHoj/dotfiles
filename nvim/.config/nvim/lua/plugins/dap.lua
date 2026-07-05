@@ -2,7 +2,8 @@
 --   * Python (workers/) via debugpy
 --   * Go (backend/) via Delve
 --   * TypeScript / Vue (frontend/) via vscode-js-debug
--- Same keymaps and UI for all three. Filetype dispatches to the right
+--   * Rust via codelldb
+-- Same keymaps and UI for all four. Filetype dispatches to the right
 -- configurations table automatically.
 
 return {
@@ -151,6 +152,44 @@ return {
         port = 2345,
         host = "127.0.0.1",
       })
+
+      -- ── Rust via codelldb ──────────────────────────────────────────────
+      -- codelldb comes from Nix (nixos-config nvim-tools.nix) and is on PATH.
+
+      local codelldb = vim.fn.exepath("codelldb")
+      if codelldb ~= "" then
+        dap.adapters.codelldb = {
+          type = "server",
+          port = "${port}",
+          executable = {
+            command = codelldb,
+            args = { "--port", "${port}" },
+          },
+        }
+
+        dap.configurations.rust = {
+          {
+            type = "codelldb",
+            request = "launch",
+            name = "Rust: launch debug binary",
+            program = function()
+              return vim.fn.input("Executable: ", vim.fn.getcwd() .. "/target/debug/", "file")
+            end,
+            cwd = "${workspaceFolder}",
+            stopOnEntry = false,
+          },
+          {
+            type = "codelldb",
+            request = "launch",
+            name = "Rust: launch test binary",
+            program = function()
+              return vim.fn.input("Test executable: ", vim.fn.getcwd() .. "/target/debug/deps/", "file")
+            end,
+            cwd = "${workspaceFolder}",
+            stopOnEntry = false,
+          },
+        }
+      end
 
       -- ── Frontend (vue / ts / tsx / js) via vscode-js-debug ─────────────
 

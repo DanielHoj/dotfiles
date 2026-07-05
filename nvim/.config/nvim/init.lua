@@ -17,6 +17,8 @@ local lsp_servers = {
   -- "eslint",
   "gopls",
   "golangci_lint_ls",
+  "rust_analyzer",
+  "nixd",
 }
 
 -- sqlls (joe-re sql-language-server) isn't packaged in nixpkgs, so only enable
