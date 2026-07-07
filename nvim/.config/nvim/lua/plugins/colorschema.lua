@@ -4,6 +4,8 @@ return {
   lazy = false,
   priority = 1000,
   opts = {
+    -- Drop nvim's background so the terminal's transparency shows through.
+    transparent = true,
     background = {
       dark = "wave", -- "wave, dragon"
     },
