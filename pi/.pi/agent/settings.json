@@ -1,0 +1,17 @@
+{
+  "lastChangelogVersion": "0.80.3",
+  "defaultProvider": "openai-codex",
+  "defaultModel": "gpt-5.5",
+  "defaultThinkingLevel": "high",
+  "hideThinkingBlock": false,
+  "packages": [
+    "npm:pi-vim",
+    "npm:pi-memory",
+    "npm:pi-subagents",
+    "npm:context-mode",
+    "npm:pi-mcp-adapter",
+    "npm:pi-observational-memory",
+    "git:github.com/elpapi42/pi-fork"
+  ],
+  "theme": "dark"
+}

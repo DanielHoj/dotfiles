@@ -1,5 +1,6 @@
 export PATH=$HOME/bin:$HOME/.local/bin:/usr/local/bin:$PATH
 export EDITOR=nvim
+export VISUAL=nvim
 
 if command -v xclip &> /dev/null; then
   alias pbcopy="xclip -selection clipboard"
@@ -35,17 +36,32 @@ alias vim='nvim'
 alias vi='nvim'
 
 # Node:
-source /usr/share/nvm/init-nvm.sh
-source /usr/share/nvm/bash_completion
+export NODE_OPTIONS=--no-network-family-autoselection
+export NVM_DIR="$HOME/.nvm"
+
+# Fast startup: put the current default Node on PATH, but only load nvm itself
+# when the `nvm` command is used.
+_node_bin="$NVM_DIR/versions/node/v24.9.0/bin"
+if [[ -d "$_node_bin" && ":$PATH:" != *":$_node_bin:"* ]]; then
+  path=("$_node_bin" $path)
+fi
+unset _node_bin
+
+_load_nvm() {
+  unfunction nvm 2>/dev/null || true
+  [[ -s /usr/share/nvm/init-nvm.sh ]] && source /usr/share/nvm/init-nvm.sh
+  [[ -s /usr/share/nvm/bash_completion ]] && source /usr/share/nvm/bash_completion
+}
+
+nvm() {
+  _load_nvm
+  nvm "$@"
+}
 
 # Use Starship as the prompt
-# Check that the function `starship_zle-keymap-select()` is defined.
-# xref: https://github.com/starship/starship/issues/3418
-type starship_zle-keymap-select >/dev/null || \
-  {
-    echo "Load starship"
-    eval "$(starship init zsh)"
-  }
+if command -v starship >/dev/null 2>&1; then
+  eval "$(starship init zsh)"
+fi
 
 eval "$(zoxide init zsh)"
 eval "$(atuin init zsh)"
@@ -75,7 +91,12 @@ alias gf='git fetch'
 alias grs='git reset'
 alias gshow='git show'
 
-eval "$(thefuck --alias)"
+# Lazy-load thefuck; generating the alias starts Python and is expensive.
+fuck() {
+  unfunction fuck 2>/dev/null || true
+  eval "$(thefuck --alias)"
+  fuck "$@"
+}
 alias fu="fuck"
 
 ### Added by Zinit's installer
@@ -105,3 +126,22 @@ bindkey '^l' autosuggest-accept
 zinit light zsh-users/zsh-syntax-highlighting
 zinit light zsh-users/zsh-history-substring-search
 
+# Keep pi-memory qmd indexing manual; automatic background embeds can spawn
+# multiple CPU-heavy `qmd embed` processes across concurrent pi sessions.
+export PI_MEMORY_QMD_UPDATE=manual
+
+# Run pi with a tmux-split external editor without affecting other programs.
+pi() {
+  if ! command -v pi >/dev/null 2>&1; then
+    _load_nvm
+  fi
+  VISUAL="$HOME/bin/pi-tmux-editor" EDITOR="$HOME/bin/pi-tmux-editor" command pi "$@"
+}
+
+
+# bun completions
+[ -s "/home/danielh/.bun/_bun" ] && source "/home/danielh/.bun/_bun"
+
+# bun
+export BUN_INSTALL="$HOME/.bun"
+export PATH="$BUN_INSTALL/bin:$PATH"
